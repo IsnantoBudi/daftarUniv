@@ -101,4 +101,23 @@
             android:layout_weight="1"
             android:visibility="visible" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Heading 0"
+        android:gravity="center"
+        android:textColor="#020101"
+        android:textSize="28dp" />
+
+    <ImageView
+        android:id="@+id/imageViewCompas"
+        android:layout_gravity="center"
+        android:layout_width="283dp"
+        android:layout_height="136dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        app:srcCompat="@drawable/kompas" />
 </LinearLayout>

@@ -1,7 +1,13 @@
 package com.gmail.isnantobudi0;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -27,9 +33,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
     EditText etSearch;
     Button btnSearch;
+
     static final LatLng ST3TELKOM_COORDINATE = new LatLng(-7.434952, 109.250123);
     static final LatLng BATURADEN_COORDINATE = new LatLng(-7.298936, 109.216753);
     static final LatLng akakom = new LatLng(-7.790810,110.408211);
@@ -42,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private Button btnDisplay;
     private TextView txt;
     private GoogleMap mMap;
+    private ImageView image;
+    private float currentDegree = 0f;
+    private SensorManager mSensorManager;
+    TextView tvHeading;
     float zoomLevel = 16.0f; //This goes up to 21
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +60,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
        addListenerOnButton();
+        image = (ImageView) findViewById(R.id.imageViewCompas);
+        tvHeading = (TextView) findViewById(R.id.tvHeading);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+// for the system's orientation sensor registered listeners
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+// to stop the listener and save battery
+        mSensorManager.unregisterListener(this);
     }
 
     private void addListenerOnButton() {
@@ -97,6 +126,36 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float degree = Math.round(event.values[0]);
+
+        tvHeading.setText("Heading " + Float.toString(degree) + "°");
+
+// create a rotation animation (reverse turn degree degrees)
+        RotateAnimation ra = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+// how long the animation will take place
+        ra.setDuration(60);
+
+// set the animation after the end of the reservation status
+        ra.setFillAfter(true);
+
+// Start the animation
+        image.startAnimation(ra);
+        currentDegree = -degree;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 }
