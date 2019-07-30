@@ -43,7 +43,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         LatLng UGM = new LatLng(-7.771489, 110.377449);
         mMap.addMarker(new MarkerOptions().position(UGM).title("Marker in UGM"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UGM,zoomLevel));
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
     }
